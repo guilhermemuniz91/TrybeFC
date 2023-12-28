@@ -17,6 +17,10 @@ class App {
     // Não remover essa rota
     this.app.get('/', (req, res) => res.json({ ok: true }));
 
+    this.app.use('/teams', teamRouter);
+    this.app.use('/matches', MatchRouter);
+    this.app.use('/login', UserRouter);
+
     // Não remova esse middleware de erro, mas fique a vontade para customizá-lo
     // Mantenha ele sempre como o último middleware a ser chamado
     this.app.use(errorMiddleware);
@@ -32,9 +36,6 @@ class App {
 
     this.app.use(express.json());
     this.app.use(accessControl);
-    this.app.use('/teams', teamRouter);
-    this.app.use('/login', UserRouter);
-    this.app.use('/matches', MatchRouter);
   }
 
   public start(PORT: string | number): void {
