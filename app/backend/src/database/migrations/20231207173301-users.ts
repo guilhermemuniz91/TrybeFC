@@ -1,9 +1,9 @@
 import { Model, QueryInterface, DataTypes } from 'sequelize';
-import IUsers from '../../Interfaces/IUsers';
+import { IUser } from '../../Interfaces/IUser';
 
 export default {
   up(queryInterface: QueryInterface) {
-    return queryInterface.createTable<Model<IUsers>>('users', {
+    return queryInterface.createTable<Model<IUser>>('users', {
       id: {
         allowNull: false,
         autoIncrement: true,

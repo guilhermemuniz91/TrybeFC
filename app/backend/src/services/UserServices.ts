@@ -1,49 +1,24 @@
 import * as bcrypt from 'bcryptjs';
-import { ILogin } from '../Interfaces/ILogin';
+import JWT from '../utils/JWT';
+import { IUserModel } from '../Interfaces/IUserModel';
 import UserModel from '../models/UserModels';
-import IUsersModel from '../Interfaces/IUsersModel';
-import { ServiceMessage, ServiceResponse } from '../Interfaces/IServiceResponse';
-import jwt from '../utils/jwt';
-import { IToken } from '../Interfaces/IToken';
+import { ServiceResponse } from '../Interfaces/IServiceResponse';
 
 export default class UserService {
   constructor(
-    private userModel: IUsersModel = new UserModel(),
-    private jwtService = jwt,
+    private userModel: IUserModel = new UserModel(),
+    private jwtService = JWT,
   ) { }
 
-  public async login(data: ILogin): Promise<ServiceResponse<ServiceMessage | IToken>> {
-    const user = await this.userModel.findByEmail(data.email);
-    if (!user) {
-      return {
-        status: 'INVALID_DATA',
-        data: { message: 'Invalid email or password' },
-      };
-    }
-    const bcryptMatch = await bcrypt.compare(data.password, user.password);
+  public async login(email: string, password: string): Promise<ServiceResponse<{ token: string }>> {
+    const user = await this.userModel.findByEmail(email);
+    if (!user) return { status: 'UNAUTHORIZED', data: { message: 'Invalid email or password' } };
 
-    if (!bcryptMatch) {
-      return {
-        status: 'INVALID_DATA',
-        data: { message: 'Invalid email or password' },
-      };
+    if (!bcrypt.compareSync(password, user.password)) {
+      return { status: 'UNAUTHORIZED', data: { message: 'Invalid email or password' } };
     }
-    const token = this.jwtService.sign(
-      { id: user.id, email: user.email, username: user.username },
-    );
+
+    const token = this.jwtService.sign({ email: user.email, role: user.role });
     return { status: 'SUCCESSFUL', data: { token } };
   }
-
-  // public async getRole(id:number): Promise<ServiceResponse<string>> {
-  //   const user = await this.userModel.findById(Number(id));
-
-  //   if (!user) {
-  //     return {
-  //       status: 'NOT_FOUND',
-  //       data: { message: 'User not found' },
-  //     };
-  //   }
-
-  //   return { status: 'SUCCESSFUL', data: user.role };
-  // }
 }

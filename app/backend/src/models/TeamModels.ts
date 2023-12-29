@@ -1,5 +1,5 @@
 import { ITeamsModel } from '../Interfaces/ITeamModel';
-import TeamsModel from '../database/models/Teams';
+import TeamsModel from '../database/models/SequelizeTeams';
 import 'express-async-errors';
 import ITeam from '../Interfaces/ITeam';
 

@@ -1,6 +1,6 @@
-import Matches from '../database/models/Matches';
+import Matches from '../database/models/SequelizeMatches';
 import IMatch from '../Interfaces/IMatch';
-import Teams from '../database/models/Teams';
+import Teams from '../database/models/SequelizeTeams';
 
 export default class MatchModel {
   model = Matches;

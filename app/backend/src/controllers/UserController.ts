@@ -1,29 +1,21 @@
 import { Request, Response } from 'express';
 import UserService from '../services/UserServices';
-// import { ServiceResponse } from '../Interfaces/IServiceResponse';
+import mapStatusHTTP from '../utils/mapStatusHTTP';
 
 export default class UserController {
   constructor(
     private userService = new UserService(),
-  ) { }
+  ) {}
 
-  public async login(req: Request, res: Response): Promise<Response> {
-    const service = await this.userService.login(req.body);
+  public async login(req: Request, res: Response) {
+    const { email, password } = req.body;
+    const serviceResponse = await this.userService.login(email, password);
 
-    if (service.status === 'INVALID_DATA') {
-      return res.status(401).json(service.data);
-    }
-
-    if (service.status === 'NOT_FOUND') {
-      return res.status(401).json(service.data);
-    }
-    return res.status(200).json(service.data);
+    return res.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data);
   }
 
-  // public async getRole(req: Request, res: Response): Promise<Response> {
-  //   const { id } = req.body.data;
-  //   if (!id) return res.status(400).json({ message: 'User not found' });
-  //   const { data }: ServiceResponse<string> = await this.userService.getRole(id);
-  //   return res.status(200).json(data);
-  // }
+  public static getRole(req: Request, res: Response) {
+    const { role } = res.locals.user;
+    return res.status(200).json({ role });
+  }
 }

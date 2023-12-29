@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import TeamsModel from '../database/models/Teams';
+import TeamsModel from '../database/models/SequelizeTeams';
 
 const validateMatch = async (req: Request, res: Response, next: NextFunction) => {
   const { homeTeamId, awayTeamId } = req.body;

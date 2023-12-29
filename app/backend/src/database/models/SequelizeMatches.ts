@@ -5,7 +5,7 @@ import {
   InferCreationAttributes,
   CreationOptional,
 } from 'sequelize';
-import Teams from './Teams';
+import Teams from './SequelizeTeams';
 import db from '.';
 
 export default class Matches extends Model<InferAttributes<Matches>,
