@@ -4,7 +4,7 @@ import * as chai from 'chai';
 import chaiHttp = require('chai-http');
 
 import { app } from '../app';
-import TeamsModel from '../database/models/Teams';
+import TeamsModel from '../database/models/SequelizeTeams';
 import { allTeams, teams } from './mocks/mocksTeam';
 
 chai.use(chaiHttp);
@@ -12,7 +12,7 @@ chai.use(chaiHttp);
 const { expect } = chai;
 
 describe('Testes do endpoint /teams', () => {
-  it('Deve retornar todos os times', async () => {
+  it('A requisição deve retornar todos os times', async () => {
     sinon.stub(TeamsModel, 'findAll').resolves(allTeams as any);
     const { status, body } = await chai.request(app).get('/teams');
 
@@ -20,7 +20,7 @@ describe('Testes do endpoint /teams', () => {
     expect(body).to.deep.equal(allTeams);
   });
 
-  it('Deve retornar times por id', async () => {
+  it('A requisição deve retornar o time com o id correto', async () => {
     sinon.stub(TeamsModel, 'findByPk').resolves(teams as any);
     const { status, body } = await chai.request(app).get('/teams/1');
 
@@ -28,7 +28,7 @@ describe('Testes do endpoint /teams', () => {
     expect(body).to.deep.equal(teams);
   });
 
-  it('Deve retornar "not found" caso o id não exista', async () =>{
+  it('A requisição deve retornar uma mensagem de erro caso não encontre o time', async () =>{
     sinon.stub(TeamsModel, 'findByPk').resolves(null);
 
     const { status, body } = await chai.request(app).get('/teams/1000');
